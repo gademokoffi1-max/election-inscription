@@ -170,7 +170,99 @@
   .mfl { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); min-width: 110px; padding-top: 1px; }
   .mfv { font-size: 14px; }
 
-  @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 1rem; } .stats-grid { grid-template-columns: 1fr; } .form-grid { grid-template-columns: 1fr; } .form-grid .full { grid-column: 1; } }
+  /* ── MOBILE NAV ── */
+  .mobile-header { display: none; }
+  .mobile-nav { display: none; }
+  .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; }
+  .mobile-overlay.open { display: block; }
+
+  @media (max-width: 768px) {
+    /* Cache complètement la sidebar sur mobile par défaut */
+    .sidebar {
+      display: flex !important;
+      position: fixed; top: 0; left: 0; bottom: 0;
+      transform: translateX(-100%);
+      transition: transform 0.28s ease;
+      z-index: 200; width: 260px;
+    }
+    .sidebar.open { transform: translateX(0); }
+
+    /* Le contenu principal prend toute la largeur */
+    .main-content {
+      margin-left: 0 !important;
+      padding: 1rem;
+      padding-bottom: 85px;
+    }
+
+    /* Header mobile visible */
+    .mobile-header {
+      display: flex !important;
+      align-items: center; justify-content: space-between;
+      padding: 14px 1rem; background: var(--accent);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .mobile-header-title { font-family: 'DM Serif Display', serif; color: #fff; font-size: 17px; }
+    .mobile-header-role { font-size: 11px; color: rgba(255,255,255,0.6); }
+    .btn-hamburger {
+      background: rgba(255,255,255,0.15); border: none; border-radius: 8px;
+      width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .btn-hamburger svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; }
+
+    /* Barre de navigation en bas */
+    .mobile-nav {
+      display: flex !important;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--surface); border-top: 1px solid var(--border);
+      z-index: 100; padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .mobile-nav-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      padding: 10px 4px 8px; gap: 3px; border: none; background: transparent;
+      color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+      font-size: 10px; cursor: pointer; transition: color 0.12s;
+    }
+    .mobile-nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .mobile-nav-item.active { color: var(--accent); }
+    .mobile-nav-item.active svg { stroke: var(--accent); }
+
+    /* Layout adjustments */
+    .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+    .stat-card { padding: 0.9rem; }
+    .stat-val { font-size: 22px; }
+    .stat-icon { width: 36px; height: 36px; }
+    .stat-icon svg { width: 16px; height: 16px; }
+
+    .form-grid { grid-template-columns: 1fr !important; }
+    .form-grid .full { grid-column: 1 !important; }
+    .form-card-body { padding: 1rem; }
+
+    .list-toolbar { flex-wrap: wrap; gap: 8px; }
+    .btn-export { font-size: 12px; padding: 8px 10px; }
+
+    .p-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .p-table table { min-width: 520px; }
+
+    .modal {
+      padding: 1.25rem 1rem;
+      max-height: 88vh; overflow-y: auto;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      max-width: 100%;
+    }
+    .modal-overlay { align-items: flex-end; padding: 0; }
+  }
+
+  @media (min-width: 769px) {
+    .sidebar { display: flex !important; transform: none !important; position: fixed; }
+    .main-content { margin-left: 240px !important; padding: 2rem; }
+    .mobile-header { display: none !important; }
+    .mobile-nav { display: none !important; }
+    .mobile-overlay { display: none !important; }
+    .stats-grid { grid-template-columns: repeat(3, 1fr) !important; }
+    .form-grid { grid-template-columns: 1fr 1fr !important; }
+  }
+
   .hidden { display: none !important; }
   .page { display: none; }
   .page.active { display: block; }
@@ -199,6 +291,40 @@
 </div>
 
 <div id="main-app">
+
+  <!-- Mobile Header -->
+  <div class="mobile-header">
+    <div>
+      <div class="mobile-header-title">Élection 2026</div>
+      <div class="mobile-header-role" id="mobile-role-label"></div>
+    </div>
+    <button class="btn-hamburger" onclick="toggleSidebar()">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="mobile-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-nav">
+    <button class="mobile-nav-item active" id="mnav-dashboard" onclick="showPage('dashboard', document.querySelector('.nav-item.active'));mobileNav('dashboard')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Accueil
+    </button>
+    <button class="mobile-nav-item" id="mnav-inscription" onclick="mobileNav('inscription')">
+      <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      Inscrire
+    </button>
+    <button class="mobile-nav-item" id="mnav-liste" onclick="mobileNav('liste')">
+      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Liste
+    </button>
+    <button class="mobile-nav-item" onclick="doLogout()">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Quitter
+    </button>
+  </nav>
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-logo">
@@ -360,6 +486,29 @@ async function sbFetch(path, opts = {}) {
 function showLoading(msg) { document.getElementById('loading-text').textContent = msg || 'Chargement...'; document.getElementById('loading-overlay').classList.add('show'); }
 function hideLoading() { document.getElementById('loading-overlay').classList.remove('show'); }
 
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('mobile-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('mobile-overlay').classList.remove('open');
+}
+
+function mobileNav(id) {
+  // Update bottom nav active state
+  ['dashboard','inscription','liste'].forEach(p => {
+    document.getElementById('mnav-'+p).classList.toggle('active', p === id);
+  });
+  // Trigger page switch
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if (id === 'liste') loadParticipants();
+  if (id === 'dashboard') updateDashboard();
+  closeSidebar();
+}
+
 function doLogin() {
   const pwd = document.getElementById('pwd-input').value;
   if (pwd === PASS_ADMIN) {
@@ -374,6 +523,7 @@ function doLogin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('main-app').style.display = 'block';
   document.getElementById('role-badge').textContent = currentRole === 'admin' ? '🔐 Administrateur' : '👤 Agent';
+  document.getElementById('mobile-role-label').textContent = currentRole === 'admin' ? 'Administrateur' : 'Agent';
   loadParticipants();
 }
 
