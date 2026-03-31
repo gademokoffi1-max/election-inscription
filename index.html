@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -144,6 +143,7 @@
   .action-btns { display: flex; gap: 6px; }
   .btn-icon { width: 30px; height: 30px; border-radius: 7px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; background: transparent; transition: background 0.12s; }
   .btn-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+  .btn-icon-edit { color: var(--gold); } .btn-icon-edit:hover { background: var(--gold-light); }
   .btn-icon-view { color: var(--accent); } .btn-icon-view:hover { background: var(--accent-light); }
   .btn-icon-del { color: var(--danger); } .btn-icon-del:hover { background: var(--danger-light); }
 
@@ -203,7 +203,7 @@
     <div class="sidebar-brand">
       <div class="brand-logo">
         <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <div class="brand-name">Élection 2026<span>Plateforme officielle</span></div>
+        <div class="brand-name">Élection 2026<span id="role-badge">Plateforme officielle</span></div>
       </div>
     </div>
     <nav class="sidebar-nav">
@@ -325,13 +325,14 @@
 <script>
 const SUPABASE_URL = 'https://dzmetpygolpdheqzfjms.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_1AJvDLUbt9ztVEbs_uhLYw_Mnh3SZIy';
-const PASSWORD = 'vote2026';
+const PASS_ADMIN = 'admin26';
+const PASS_AGENT = 'agent26';
 
 let allParticipants = [];
 let photoData = null;
 let docsCount = 0;
+let currentRole = null; // 'admin' or 'agent'
 
-// Set max date for DOB to today
 document.addEventListener('DOMContentLoaded', () => {
   const dobInput = document.getElementById('f-dob');
   if (dobInput) dobInput.max = new Date().toISOString().split('T')[0];
@@ -360,17 +361,24 @@ function showLoading(msg) { document.getElementById('loading-text').textContent 
 function hideLoading() { document.getElementById('loading-overlay').classList.remove('show'); }
 
 function doLogin() {
-  if (document.getElementById('pwd-input').value === PASSWORD) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main-app').style.display = 'block';
-    loadParticipants();
+  const pwd = document.getElementById('pwd-input').value;
+  if (pwd === PASS_ADMIN) {
+    currentRole = 'admin';
+  } else if (pwd === PASS_AGENT) {
+    currentRole = 'agent';
   } else {
     document.getElementById('err-msg').textContent = 'Mot de passe incorrect.';
     document.getElementById('pwd-input').value = '';
+    return;
   }
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  document.getElementById('role-badge').textContent = currentRole === 'admin' ? '🔐 Administrateur' : '👤 Agent';
+  loadParticipants();
 }
 
 function doLogout() {
+  currentRole = null;
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('pwd-input').value = '';
@@ -386,7 +394,6 @@ function showPage(id, el) {
 }
 
 function validateNNI(input) {
-  // Allow only letters, digits and dash
   const cleaned = input.value.replace(/[^a-zA-Z0-9\-]/g, '').toUpperCase();
   if (input.value !== cleaned) input.value = cleaned;
   const val = input.value.trim();
@@ -395,35 +402,26 @@ function validateNNI(input) {
     input.classList.add('input-error');
     const h = document.getElementById('hint-nni');
     h.textContent = 'NNI invalide — lettres et chiffres uniquement'; h.classList.add('show');
-  } else {
-    clearErr('f-nni','hint-nni');
-  }
+  } else { clearErr('f-nni','hint-nni'); }
 }
 
 function validateTel(input) {
-  // Suppress any non-digit and non-+ character as the user types
   const cleaned = input.value.replace(/[^\d+\s\-]/g, '');
   if (input.value !== cleaned) input.value = cleaned;
   const val = input.value.trim();
   if (!val) return;
-  // Must have at least 6 digits
-  const digitsOnly = val.replace(/\D/g,'');
-  if (digitsOnly.length < 6) {
+  if (val.replace(/\D/g,'').length < 6) {
     input.classList.add('input-error');
     const h = document.getElementById('hint-tel');
     h.textContent = 'Numéro invalide — chiffres uniquement'; h.classList.add('show');
-  } else {
-    clearErr('f-tel','hint-tel');
-  }
+  } else { clearErr('f-tel','hint-tel'); }
 }
 
 function checkDate(input) {
-  const val = input.value;
-  if (!val) return;
+  const val = input.value; if (!val) return;
   const d = new Date(val);
   const today = new Date(); today.setHours(23,59,59,999);
-  const min = new Date('1900-01-01');
-  if (isNaN(d.getTime()) || d > today || d < min) {
+  if (isNaN(d.getTime()) || d > today || d < new Date('1900-01-01')) {
     input.classList.add('input-error');
     const hint = document.getElementById('hint-dob');
     hint.textContent = d > today ? 'La date ne peut pas être dans le futur' : 'Date invalide (avant 1900)';
@@ -435,10 +433,9 @@ function clearErr(inputId, hintId) {
   document.getElementById(inputId).classList.remove('input-error');
   document.getElementById(hintId).classList.remove('show');
 }
- 
+
 function handlePhoto(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
     photoData = ev.target.result;
@@ -456,13 +453,11 @@ function handleDocs(e) {
 async function submitForm() {
   document.getElementById('alert-success').style.display = 'none';
   document.getElementById('alert-error').style.display = 'none';
-
   const nom = document.getElementById('f-nom').value.trim();
   const prenom = document.getElementById('f-prenom').value.trim();
   const tel = document.getElementById('f-tel').value.trim();
   const nni = document.getElementById('f-nni').value.trim();
   const dob = document.getElementById('f-dob').value;
-
   let hasErr = false;
   if (!nom) { markErr('f-nom','hint-nom','Champ obligatoire'); hasErr = true; }
   if (!prenom) { markErr('f-prenom','hint-prenom','Champ obligatoire'); hasErr = true; }
@@ -471,47 +466,30 @@ async function submitForm() {
   if (!nni) { markErr('f-nni','hint-nni','Champ obligatoire'); hasErr = true; }
   else if (nni.length < 4) { markErr('f-nni','hint-nni','NNI invalide — lettres et chiffres uniquement'); hasErr = true; }
   if (dob) {
-    const d = new Date(dob);
-    const today = new Date(); today.setHours(23,59,59,999);
-    if (isNaN(d.getTime()) || d > today || d < new Date('1900-01-01')) {
-      markErr('f-dob','hint-dob', d > today ? 'La date ne peut pas être dans le futur' : 'Date invalide');
-      hasErr = true;
-    }
+    const d = new Date(dob); const today = new Date(); today.setHours(23,59,59,999);
+    if (isNaN(d.getTime()) || d > today || d < new Date('1900-01-01')) { markErr('f-dob','hint-dob', d > today ? 'La date ne peut pas être dans le futur' : 'Date invalide'); hasErr = true; }
   }
   if (hasErr) { showErr('Veuillez corriger les erreurs indiquées.'); return; }
-
   document.getElementById('btn-submit').disabled = true;
   showLoading('Enregistrement en cours...');
-
   try {
-    await sbFetch('participants', {
-      method: 'POST', prefer: 'return=minimal',
-      body: JSON.stringify({ nom, prenom, telephone: tel, nni, date_naissance: dob || null, region: document.getElementById('f-region').value.trim() || null, photo: photoData || null, docs_count: docsCount })
-    });
-    const s = document.getElementById('alert-success');
-    s.style.display = 'flex';
+    await sbFetch('participants', { method: 'POST', prefer: 'return=minimal', body: JSON.stringify({ nom, prenom, telephone: tel, nni, date_naissance: dob || null, region: document.getElementById('f-region').value.trim() || null, photo: photoData || null, docs_count: docsCount }) });
+    const s = document.getElementById('alert-success'); s.style.display = 'flex';
     setTimeout(() => s.style.display = 'none', 3500);
-    resetForm();
-    await loadParticipants();
-    updateDashboard();
+    resetForm(); await loadParticipants(); updateDashboard();
   } catch(err) {
     showErr(err.message.includes('unique') || err.message.includes('duplicate') ? 'Ce NNI est déjà enregistré.' : 'Erreur : ' + err.message);
-  } finally {
-    document.getElementById('btn-submit').disabled = false;
-    hideLoading();
-  }
+  } finally { document.getElementById('btn-submit').disabled = false; hideLoading(); }
 }
 
 function markErr(iid, hid, msg) {
   document.getElementById(iid).classList.add('input-error');
-  const h = document.getElementById(hid);
-  h.textContent = msg; h.classList.add('show');
+  const h = document.getElementById(hid); h.textContent = msg; h.classList.add('show');
 }
 
 function showErr(msg) {
   document.getElementById('alert-error-msg').textContent = msg;
-  const e = document.getElementById('alert-error');
-  e.style.display = 'flex';
+  const e = document.getElementById('alert-error'); e.style.display = 'flex';
   setTimeout(() => e.style.display = 'none', 5000);
 }
 
@@ -528,11 +506,9 @@ async function loadParticipants() {
   showLoading('Chargement des données...');
   try {
     allParticipants = await sbFetch('participants?select=*&order=created_at.desc');
-    renderList('');
-    updateDashboard();
-  } catch(e) {
-    document.getElementById('list-count-label').textContent = 'Erreur de chargement';
-  } finally { hideLoading(); }
+    renderList(''); updateDashboard();
+  } catch(e) { document.getElementById('list-count-label').textContent = 'Erreur de chargement'; }
+  finally { hideLoading(); }
 }
 
 function filterList(q) { renderList(q); }
@@ -549,6 +525,10 @@ function renderList(q) {
     const av = p.photo ? `<img src="${p.photo}" />` : ini;
     const dob = p.date_naissance ? new Date(p.date_naissance+'T12:00:00').toLocaleDateString('fr-FR') : '—';
     const dt = new Date(p.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+    // Boutons selon rôle
+    const adminBtns = currentRole === 'admin' ? `
+      <button class="btn-icon btn-icon-edit" onclick="editP(${p.id})" title="Modifier"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-icon btn-icon-del" onclick="delP(${p.id})" title="Supprimer"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button>` : '';
     return `<tr>
       <td style="color:var(--text-faint);font-size:12px;">${String(i+1).padStart(3,'0')}</td>
       <td><div class="p-name-cell"><div class="p-avatar">${av}</div><div><div class="p-fullname">${p.prenom} ${p.nom}</div><div class="p-nni">${p.nni}</div></div></div></td>
@@ -559,7 +539,7 @@ function renderList(q) {
       <td>${p.docs_count>0?`<span class="badge badge-gold">${p.docs_count} doc(s)</span>`:'<span style="color:var(--text-faint)">—</span>'}</td>
       <td><div class="action-btns">
         <button class="btn-icon btn-icon-view" onclick="viewP(${p.id})" title="Voir"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-        <button class="btn-icon btn-icon-del" onclick="delP(${p.id})" title="Supprimer"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button>
+        ${adminBtns}
       </div></td>
     </tr>`;
   }).join('');
@@ -591,6 +571,7 @@ function viewP(id) {
   const av = p.photo?`<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;" />`:ini;
   const dob = p.date_naissance ? new Date(p.date_naissance+'T12:00:00').toLocaleDateString('fr-FR') : '—';
   const dt = new Date(p.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  const editBtn = currentRole === 'admin' ? `<button onclick="closeModal();editP(${p.id})" style="margin-top:1.25rem;width:100%;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Modifier ce participant</button>` : '';
   document.getElementById('modal-content').innerHTML = `
     <div class="modal-header"><div class="modal-title">Profil du participant</div><button class="btn-close" onclick="closeModal()">×</button></div>
     <div class="modal-avatar">${av}</div>
@@ -601,13 +582,74 @@ function viewP(id) {
       <div class="modal-field"><span class="mfl">Naissance</span><span class="mfv">${dob}</span></div>
       <div class="modal-field"><span class="mfl">Documents</span><span class="mfv">${p.docs_count>0?p.docs_count+' fichier(s)':'Aucun'}</span></div>
       <div class="modal-field"><span class="mfl">Inscrit le</span><span class="mfv">${dt}</span></div>
+    </div>
+    ${editBtn}`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+// ── EDIT MODAL (admin only) ──
+function editP(id) {
+  if (currentRole !== 'admin') return;
+  const p = allParticipants.find(x=>x.id===id); if(!p) return;
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-header"><div class="modal-title">Modifier le participant</div><button class="btn-close" onclick="closeModal()">×</button></div>
+    <div style="display:grid;gap:14px;">
+      <div class="field"><label class="fl">Nom *</label><input type="text" id="e-nom" value="${p.nom||''}" /></div>
+      <div class="field"><label class="fl">Prénom *</label><input type="text" id="e-prenom" value="${p.prenom||''}" /></div>
+      <div class="field"><label class="fl">Téléphone *</label><input type="tel" id="e-tel" value="${p.telephone||''}" oninput="validateTelEdit(this)" /></div>
+      <div class="field"><label class="fl">NNI *</label><input type="text" id="e-nni" value="${p.nni||''}" oninput="validateNNIEdit(this)" /></div>
+      <div class="field"><label class="fl">Date de naissance</label><input type="date" id="e-dob" value="${p.date_naissance||''}" max="${new Date().toISOString().split('T')[0]}" /></div>
+      <div class="field"><label class="fl">Région</label><input type="text" id="e-region" value="${p.region||''}" placeholder="Ex: Lomé, Kara..." /></div>
+    </div>
+    <div id="edit-err" style="color:var(--danger);font-size:13px;margin-top:10px;display:none;"></div>
+    <div style="display:flex;gap:10px;margin-top:1.25rem;">
+      <button onclick="closeModal()" style="flex:1;padding:10px;border:1px solid var(--border-strong);background:transparent;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;">Annuler</button>
+      <button onclick="saveEdit(${p.id})" style="flex:2;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Enregistrer les modifications</button>
     </div>`;
   document.getElementById('modal-overlay').classList.add('open');
+}
+
+function validateTelEdit(input) {
+  input.value = input.value.replace(/[^\d+\s\-]/g, '');
+}
+function validateNNIEdit(input) {
+  input.value = input.value.replace(/[^a-zA-Z0-9\-]/g, '').toUpperCase();
+}
+
+async function saveEdit(id) {
+  const nom = document.getElementById('e-nom').value.trim();
+  const prenom = document.getElementById('e-prenom').value.trim();
+  const tel = document.getElementById('e-tel').value.trim();
+  const nni = document.getElementById('e-nni').value.trim();
+  const dob = document.getElementById('e-dob').value;
+  const region = document.getElementById('e-region').value.trim();
+  const errEl = document.getElementById('edit-err');
+
+  if (!nom || !prenom || !tel || !nni) { errEl.textContent = 'Veuillez remplir tous les champs obligatoires.'; errEl.style.display = 'block'; return; }
+  if (tel.replace(/\D/g,'').length < 6) { errEl.textContent = 'Numéro de téléphone invalide.'; errEl.style.display = 'block'; return; }
+  if (nni.length < 4) { errEl.textContent = 'NNI invalide.'; errEl.style.display = 'block'; return; }
+  if (dob) {
+    const d = new Date(dob); const today = new Date(); today.setHours(23,59,59,999);
+    if (isNaN(d.getTime()) || d > today || d < new Date('1900-01-01')) { errEl.textContent = 'Date de naissance invalide.'; errEl.style.display = 'block'; return; }
+  }
+
+  showLoading('Modification en cours...');
+  try {
+    await sbFetch(`participants?id=eq.${id}`, { method: 'PATCH', prefer: 'return=minimal', body: JSON.stringify({ nom, prenom, telephone: tel, nni, date_naissance: dob || null, region: region || null }) });
+    closeModal();
+    await loadParticipants();
+    updateDashboard();
+  } catch(e) {
+    hideLoading();
+    errEl.textContent = e.message.includes('unique') ? 'Ce NNI est déjà utilisé par un autre participant.' : 'Erreur : ' + e.message;
+    errEl.style.display = 'block';
+  }
 }
 
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 
 async function delP(id) {
+  if (currentRole !== 'admin') return;
   if (!confirm('Supprimer ce participant définitivement ?')) return;
   showLoading('Suppression...');
   try {
@@ -632,4 +674,6 @@ function exportCSV() {
 document.addEventListener('keydown', e => { if(e.key==='Enter' && document.getElementById('login-screen').style.display!=='none') doLogin(); });
 </script>
 </body>
+</html>
+-e </body>
 </html>
