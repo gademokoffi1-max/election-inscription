@@ -7,505 +7,168 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #F5F3EE;
-    --surface: #FFFFFF;
-    --surface2: #EFEDE8;
-    --border: rgba(0,0,0,0.10);
-    --border-strong: rgba(0,0,0,0.18);
-    --text: #1A1A18;
-    --text-muted: #6B6A65;
-    --text-faint: #9E9D98;
-    --accent: #1A3A6B;
-    --accent-light: #E8EEF7;
-    --accent-hover: #122B52;
-    --gold: #C8922A;
-    --gold-light: #FBF3E3;
-    --success: #2D7A4F;
-    --success-light: #E6F5ED;
-    --danger: #B03030;
-    --danger-light: #FBEAEA;
-    --radius: 10px;
-    --radius-lg: 16px;
-    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --bg: #F5F3EE; --surface: #FFFFFF; --surface2: #EFEDE8;
+    --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.18);
+    --text: #1A1A18; --text-muted: #6B6A65; --text-faint: #9E9D98;
+    --accent: #1A3A6B; --accent-light: #E8EEF7; --accent-hover: #122B52;
+    --gold: #C8922A; --gold-light: #FBF3E3;
+    --success: #2D7A4F; --success-light: #E6F5ED;
+    --danger: #B03030; --danger-light: #FBEAEA;
+    --radius: 10px; --radius-lg: 16px;
     --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
   }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  /* ── LOGIN ── */
-  #login-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    background: var(--bg);
-    position: relative;
-    overflow: hidden;
-  }
-
-  #login-screen::before {
-    content: '';
-    position: absolute;
-    top: -120px; right: -120px;
-    width: 480px; height: 480px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(26,58,107,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  #login-screen::after {
-    content: '';
-    position: absolute;
-    bottom: -80px; left: -80px;
-    width: 320px; height: 320px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,146,42,0.07) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .login-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    padding: 2.5rem 2rem;
-    width: 100%;
-    max-width: 400px;
-    position: relative;
-    z-index: 1;
-    animation: slideUp 0.4s ease;
-  }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .login-emblem {
-    display: flex; align-items: center; justify-content: center;
-    width: 60px; height: 60px; border-radius: 50%;
-    background: var(--accent); margin: 0 auto 1.5rem;
-  }
-
+  #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; background: var(--bg); position: relative; overflow: hidden; }
+  #login-screen::before { content: ''; position: absolute; top: -120px; right: -120px; width: 480px; height: 480px; border-radius: 50%; background: radial-gradient(circle, rgba(26,58,107,0.08) 0%, transparent 70%); pointer-events: none; }
+  .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 2.5rem 2rem; width: 100%; max-width: 400px; position: relative; z-index: 1; animation: slideUp 0.4s ease; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .login-emblem { display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 50%; background: var(--accent); margin: 0 auto 1.5rem; }
   .login-emblem svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 1.8; }
+  .login-title { font-family: 'DM Serif Display', serif; font-size: 24px; text-align: center; margin-bottom: 4px; }
+  .login-sub { text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 2rem; }
+  .divider-label { display: flex; align-items: center; gap: 10px; color: var(--text-faint); font-size: 12px; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 1px; }
+  .divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  label.fl { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.6px; }
 
-  .login-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px; text-align: center;
-    color: var(--text); margin-bottom: 4px;
+  input[type="text"], input[type="tel"], input[type="date"], input[type="password"], select {
+    width: 100%; padding: 10px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius);
+    background: var(--surface); color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; appearance: none;
   }
+  input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,58,107,0.10); }
+  input.input-error { border-color: var(--danger) !important; box-shadow: 0 0 0 3px rgba(176,48,48,0.10) !important; }
 
-  .login-sub {
-    text-align: center; font-size: 13px;
-    color: var(--text-muted); margin-bottom: 2rem;
-    letter-spacing: 0.3px;
-  }
-
-  .divider-label {
-    display: flex; align-items: center; gap: 10px;
-    color: var(--text-faint); font-size: 12px;
-    margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 1px;
-  }
-
-  .divider-label::before, .divider-label::after {
-    content: ''; flex: 1; height: 1px; background: var(--border);
-  }
-
-  label.fl {
-    display: block; font-size: 12px; font-weight: 500;
-    color: var(--text-muted); margin-bottom: 6px;
-    text-transform: uppercase; letter-spacing: 0.6px;
-  }
-
-  input[type="text"], input[type="tel"], input[type="date"],
-  input[type="password"], input[type="email"], select, textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    appearance: none;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(26,58,107,0.10);
-  }
-
-  .btn-primary {
-    width: 100%; padding: 11px;
-    background: var(--accent); color: #fff;
-    border: none; border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 600;
-    cursor: pointer; letter-spacing: 0.3px;
-    transition: background 0.15s, transform 0.1s;
-  }
-
+  .btn-primary { width: 100%; padding: 11px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
   .btn-primary:hover { background: var(--accent-hover); }
-  .btn-primary:active { transform: scale(0.99); }
+  .err-msg { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; min-height: 20px; }
 
-  .err-msg {
-    color: var(--danger); font-size: 13px;
-    text-align: center; margin-top: 10px; min-height: 20px;
-  }
-
-  /* ── APP SHELL ── */
   #main-app { display: none; min-height: 100vh; }
-
-  .sidebar {
-    position: fixed; top: 0; left: 0; bottom: 0;
-    width: 240px; background: var(--accent);
-    display: flex; flex-direction: column;
-    z-index: 100; padding: 0;
-  }
-
-  .sidebar-brand {
-    padding: 1.5rem 1.25rem 1.25rem;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-  }
-
-  .brand-logo {
-    display: flex; align-items: center; gap: 10px;
-  }
-
-  .brand-icon {
-    width: 36px; height: 36px; border-radius: 8px;
-    background: rgba(255,255,255,0.15);
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-
+  .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 240px; background: var(--accent); display: flex; flex-direction: column; z-index: 100; }
+  .sidebar-brand { padding: 1.5rem 1.25rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .brand-logo { display: flex; align-items: center; gap: 10px; }
+  .brand-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; }
   .brand-icon svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 1.8; }
-
-  .brand-name {
-    font-family: 'DM Serif Display', serif;
-    color: #fff; font-size: 15px; line-height: 1.2;
-  }
-
-  .brand-name span { display: block; font-family: 'DM Sans', sans-serif; font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 400; margin-top: 1px; }
-
+  .brand-name { font-family: 'DM Serif Display', serif; color: #fff; font-size: 15px; line-height: 1.2; }
+  .brand-name span { display: block; font-family: 'DM Sans', sans-serif; font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 400; }
   .sidebar-nav { flex: 1; padding: 1rem 0.75rem; display: flex; flex-direction: column; gap: 2px; }
-
-  .nav-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 12px; border-radius: 8px;
-    color: rgba(255,255,255,0.65);
-    cursor: pointer; font-size: 14px; font-weight: 400;
-    transition: background 0.12s, color 0.12s;
-    border: none; background: transparent; width: 100%; text-align: left;
-  }
-
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: rgba(255,255,255,0.65); cursor: pointer; font-size: 14px; transition: background 0.12s, color 0.12s; border: none; background: transparent; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
   .nav-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
   .nav-item:hover { background: rgba(255,255,255,0.10); color: #fff; }
   .nav-item.active { background: rgba(255,255,255,0.18); color: #fff; font-weight: 500; }
-
-  .nav-section-label {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
-    color: rgba(255,255,255,0.35); padding: 12px 12px 4px;
-  }
-
-  .sidebar-footer {
-    padding: 1rem 0.75rem;
-    border-top: 1px solid rgba(255,255,255,0.12);
-  }
-
-  .btn-logout {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 12px; border-radius: 8px;
-    color: rgba(255,255,255,0.55); cursor: pointer;
-    font-size: 13px; border: none; background: transparent;
-    width: 100%; font-family: 'DM Sans', sans-serif;
-    transition: background 0.12s, color 0.12s;
-  }
-
+  .nav-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.35); padding: 12px 12px 4px; }
+  .sidebar-footer { padding: 1rem 0.75rem; border-top: 1px solid rgba(255,255,255,0.12); }
+  .btn-logout { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: rgba(255,255,255,0.55); cursor: pointer; font-size: 13px; border: none; background: transparent; width: 100%; font-family: 'DM Sans', sans-serif; transition: background 0.12s; }
   .btn-logout:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
   .btn-logout svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; }
 
-  .main-content {
-    margin-left: 240px;
-    padding: 2rem;
-    min-height: 100vh;
-  }
-
-  .page-header {
-    margin-bottom: 2rem;
-  }
-
-  .page-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 26px; color: var(--text);
-    margin-bottom: 4px;
-  }
-
+  .main-content { margin-left: 240px; padding: 2rem; min-height: 100vh; }
+  .page-header { margin-bottom: 2rem; }
+  .page-title { font-family: 'DM Serif Display', serif; font-size: 26px; margin-bottom: 4px; }
   .page-sub { font-size: 14px; color: var(--text-muted); }
 
-  /* ── STATS ── */
-  .stats-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 14px; margin-bottom: 2rem;
-  }
-
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 1.25rem 1.5rem;
-    display: flex; align-items: center; gap: 14px;
-  }
-
-  .stat-icon {
-    width: 44px; height: 44px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 14px; }
+  .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .stat-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; }
   .si-blue { background: var(--accent-light); color: var(--accent); }
   .si-gold { background: var(--gold-light); color: var(--gold); }
   .si-green { background: var(--success-light); color: var(--success); }
-
   .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-  .stat-val { font-size: 28px; font-weight: 600; color: var(--text); line-height: 1; }
+  .stat-val { font-size: 28px; font-weight: 600; line-height: 1; }
 
-  /* ── FORM ── */
-  .form-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); overflow: hidden;
-  }
-
-  .form-card-header {
-    padding: 1.25rem 1.75rem;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
-  }
-
+  .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .form-card-header { padding: 1.25rem 1.75rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
   .form-card-header svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.8; }
-  .form-card-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .form-card-title { font-size: 15px; font-weight: 600; }
   .form-card-body { padding: 1.75rem; }
-
-  .form-section-label {
-    font-size: 11px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 1px; color: var(--text-faint);
-    margin-bottom: 1rem; padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
+  .form-section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-faint); margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
   .form-grid .full { grid-column: 1 / -1; }
   .field { display: flex; flex-direction: column; }
+  .field-hint { font-size: 11px; color: var(--danger); margin-top: 4px; display: none; }
+  .field-hint.show { display: block; }
 
-  /* ── PHOTO UPLOAD ── */
-  .photo-zone {
-    display: flex; align-items: center; gap: 1.5rem;
-    padding: 1.25rem;
-    border: 1.5px dashed var(--border-strong);
-    border-radius: var(--radius-lg);
-    cursor: pointer; transition: border-color 0.15s, background 0.15s;
-    position: relative;
-  }
-
+  .photo-zone { display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative; margin-bottom: 1.5rem; }
   .photo-zone:hover { border-color: var(--accent); background: var(--accent-light); }
   .photo-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-
-  .photo-frame {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: var(--surface2); border: 2px solid var(--border);
-    overflow: hidden; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-
+  .photo-frame { width: 72px; height: 72px; border-radius: 50%; background: var(--surface2); border: 2px solid var(--border); overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
   .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
   .photo-frame svg { width: 28px; height: 28px; stroke: var(--text-faint); fill: none; stroke-width: 1.5; }
-
-  .photo-meta strong { display: block; font-size: 14px; color: var(--text); margin-bottom: 2px; }
+  .photo-meta strong { display: block; font-size: 14px; margin-bottom: 2px; }
   .photo-meta span { font-size: 12px; color: var(--text-muted); }
 
-  /* ── DOCS UPLOAD ── */
-  .docs-zone {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 14px;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    cursor: pointer; position: relative;
-    transition: border-color 0.15s;
-  }
-
+  .docs-zone { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; position: relative; transition: border-color 0.15s; margin-bottom: 1.5rem; }
   .docs-zone:hover { border-color: var(--accent); }
   .docs-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
   .docs-icon { width: 34px; height: 34px; background: var(--accent-light); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .docs-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.8; }
-  .docs-text strong { font-size: 13px; color: var(--text); }
+  .docs-text strong { font-size: 13px; }
   .docs-text span { display: block; font-size: 12px; color: var(--text-muted); }
 
-  /* ── SUBMIT BTN ── */
-  .btn-submit {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 12px 2rem;
-    background: var(--accent); color: #fff;
-    border: none; border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 600;
-    cursor: pointer; transition: background 0.15s;
-  }
-
+  .btn-submit { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 2rem; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; margin-top: 1.75rem; }
   .btn-submit:hover { background: var(--accent-hover); }
+  .btn-submit:disabled { background: #aaa; cursor: not-allowed; }
   .btn-submit svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2; }
 
-  /* ── ALERTS ── */
-  .alert {
-    padding: 12px 16px; border-radius: var(--radius);
-    font-size: 13px; margin-top: 1rem;
-    display: none; align-items: center; gap: 8px;
-  }
-
-  .alert svg { width: 16px; height: 16px; flex-shrink: 0; stroke-width: 2; }
+  .alert { padding: 12px 16px; border-radius: var(--radius); font-size: 13px; margin-top: 1rem; display: none; align-items: center; gap: 8px; }
+  .alert svg { width: 16px; height: 16px; flex-shrink: 0; stroke-width: 2; fill: none; stroke: currentColor; }
   .alert-success { background: var(--success-light); color: var(--success); border: 1px solid rgba(45,122,79,0.2); }
   .alert-error { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(176,48,48,0.2); }
 
-  /* ── LIST ── */
-  .list-toolbar {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;
-  }
-
-  .search-wrap { position: relative; flex: 1; }
+  .list-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; }
   .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; stroke: var(--text-faint); fill: none; stroke-width: 1.8; pointer-events: none; }
   .search-wrap input { padding-left: 36px; }
-
-  .btn-export {
-    display: flex; align-items: center; gap: 6px;
-    padding: 9px 14px; border-radius: var(--radius);
-    border: 1px solid var(--border-strong);
-    background: var(--surface); color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px; cursor: pointer; white-space: nowrap;
-    transition: background 0.12s;
-  }
-
+  .btn-export { display: flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background 0.12s; }
   .btn-export:hover { background: var(--surface2); }
   .btn-export svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
 
-  .p-table {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); overflow: hidden;
-  }
-
+  .p-table { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
   .p-table table { width: 100%; border-collapse: collapse; }
-
-  .p-table thead th {
-    padding: 11px 16px; text-align: left;
-    font-size: 11px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.6px; color: var(--text-muted);
-    background: var(--surface2); border-bottom: 1px solid var(--border);
-  }
-
-  .p-table tbody tr { transition: background 0.1s; }
+  .p-table thead th { padding: 11px 16px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); background: var(--surface2); border-bottom: 1px solid var(--border); }
   .p-table tbody tr:hover { background: var(--bg); }
   .p-table tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
-  .p-table td { padding: 12px 16px; font-size: 14px; color: var(--text); vertical-align: middle; }
-
-  .participant-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
-    overflow: hidden; flex-shrink: 0;
-    background: var(--accent-light);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600; color: var(--accent);
-  }
-
-  .participant-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
+  .p-table td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
+  .p-avatar { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--accent); }
+  .p-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .p-name-cell { display: flex; align-items: center; gap: 10px; }
   .p-fullname { font-weight: 500; }
   .p-nni { font-size: 12px; color: var(--text-muted); }
-
-  .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 500;
-  }
-
+  .badge { display: inline-flex; padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 500; }
   .badge-blue { background: var(--accent-light); color: var(--accent); }
   .badge-gold { background: var(--gold-light); color: var(--gold); }
-
-  .action-btns { display: flex; gap: 6px; align-items: center; }
-
-  .btn-icon {
-    width: 30px; height: 30px; border-radius: 7px; border: none;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background 0.12s;
-    background: transparent;
-  }
-
+  .action-btns { display: flex; gap: 6px; }
+  .btn-icon { width: 30px; height: 30px; border-radius: 7px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; background: transparent; transition: background 0.12s; }
   .btn-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
-  .btn-icon-view { color: var(--accent); }
-  .btn-icon-view:hover { background: var(--accent-light); }
-  .btn-icon-del { color: var(--danger); }
-  .btn-icon-del:hover { background: var(--danger-light); }
+  .btn-icon-view { color: var(--accent); } .btn-icon-view:hover { background: var(--accent-light); }
+  .btn-icon-del { color: var(--danger); } .btn-icon-del:hover { background: var(--danger-light); }
 
-  .empty-state {
-    padding: 4rem 1rem; text-align: center;
-    color: var(--text-muted); font-size: 14px;
-  }
-
+  .empty-state { padding: 4rem 1rem; text-align: center; color: var(--text-muted); font-size: 14px; }
   .empty-state svg { width: 40px; height: 40px; stroke: var(--text-faint); fill: none; stroke-width: 1.2; margin: 0 auto 1rem; display: block; }
 
-  /* ── MODAL ── */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 200; align-items: center; justify-content: center;
-    padding: 1rem;
-  }
+  .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.75); z-index: 300; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+  .loading-overlay.show { display: flex; }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--accent-light); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 13px; color: var(--text-muted); }
 
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
   .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: var(--surface); border-radius: var(--radius-lg);
-    padding: 2rem; max-width: 480px; width: 100%;
-    box-shadow: var(--shadow-lg); animation: slideUp 0.2s ease;
-  }
-
+  .modal { background: var(--surface); border-radius: var(--radius-lg); padding: 2rem; max-width: 460px; width: 100%; box-shadow: var(--shadow-lg); animation: slideUp 0.2s ease; }
   .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
   .modal-title { font-family: 'DM Serif Display', serif; font-size: 20px; }
-  .btn-close { border: none; background: transparent; font-size: 20px; cursor: pointer; color: var(--text-muted); width: 32px; height: 32px; border-radius: 6px; }
+  .btn-close { border: none; background: transparent; font-size: 22px; cursor: pointer; color: var(--text-muted); width: 32px; height: 32px; border-radius: 6px; }
   .btn-close:hover { background: var(--surface2); }
-
-  .modal-avatar {
-    width: 80px; height: 80px; border-radius: 50%;
-    border: 3px solid var(--accent-light); overflow: hidden;
-    margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center;
-    background: var(--accent-light); color: var(--accent); font-size: 22px; font-weight: 600;
-  }
-
+  .modal-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent-light); overflow: hidden; margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center; background: var(--accent-light); color: var(--accent); font-size: 22px; font-weight: 600; }
   .modal-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
   .modal-fields { display: grid; gap: 10px; }
   .modal-field { display: flex; gap: 8px; }
-  .modal-field-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); min-width: 110px; padding-top: 1px; }
-  .modal-field-val { font-size: 14px; color: var(--text); }
+  .mfl { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); min-width: 110px; padding-top: 1px; }
+  .mfv { font-size: 14px; }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main-content { margin-left: 0; padding: 1rem; }
-    .stats-grid { grid-template-columns: 1fr; }
-    .form-grid { grid-template-columns: 1fr; }
-    .form-grid .full { grid-column: 1; }
-    .p-table thead { display: none; }
-    .p-table td { display: block; padding: 6px 12px; }
-    .p-table tr { display: block; padding: 10px 0; }
-  }
-
+  @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 1rem; } .stats-grid { grid-template-columns: 1fr; } .form-grid { grid-template-columns: 1fr; } .form-grid .full { grid-column: 1; } }
   .hidden { display: none !important; }
   .page { display: none; }
   .page.active { display: block; }
@@ -513,12 +176,14 @@
 </head>
 <body>
 
-<!-- ═══════════════ LOGIN ═══════════════ -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loading-text">Chargement...</div>
+</div>
+
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-emblem">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    </div>
+    <div class="login-emblem"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
     <div class="login-title">Inscription Électorale</div>
     <div class="login-sub">Plateforme sécurisée — accès réservé</div>
     <div class="divider-label">Authentification</div>
@@ -531,199 +196,118 @@
   </div>
 </div>
 
-<!-- ═══════════════ APP ═══════════════ -->
 <div id="main-app">
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-logo">
-        <div class="brand-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="brand-name">
-          Élection 2026
-          <span>Plateforme officielle</span>
-        </div>
+        <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="brand-name">Élection 2025<span>Plateforme officielle</span></div>
       </div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section-label">Navigation</div>
-      <button class="nav-item active" onclick="showPage('dashboard', this)">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Tableau de bord
+      <button class="nav-item active" onclick="showPage('dashboard',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Tableau de bord
       </button>
-      <button class="nav-item" onclick="showPage('inscription', this)">
-        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        Inscrire un participant
+      <button class="nav-item" onclick="showPage('inscription',this)">
+        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Inscrire un participant
       </button>
-      <button class="nav-item" onclick="showPage('liste', this)">
-        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        Liste des inscrits
+      <button class="nav-item" onclick="showPage('liste',this)">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Liste des inscrits
       </button>
     </nav>
     <div class="sidebar-footer">
       <button class="btn-logout" onclick="doLogout()">
-        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Déconnexion
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Déconnexion
       </button>
     </div>
   </aside>
 
-  <!-- Main Content -->
   <main class="main-content">
 
-    <!-- ── DASHBOARD ── -->
     <div id="page-dashboard" class="page active">
       <div class="page-header">
         <div class="page-title">Tableau de bord</div>
         <div class="page-sub">Vue d'ensemble des inscriptions</div>
       </div>
       <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon si-blue">
-            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <div><div class="stat-label">Total inscrits</div><div class="stat-val" id="st-total">0</div></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon si-gold">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          </div>
-          <div><div class="stat-label">Aujourd'hui</div><div class="stat-val" id="st-today">0</div></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon si-green">
-            <svg viewBox="0 0 24 24"><path d="M23 18.7a9.9 9.9 0 0 1-2.6 2.7c-.8.6-1.8.6-2.7 0a9.9 9.9 0 0 1-2.6-2.7"/><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
-          </div>
-          <div><div class="stat-label">Avec photo</div><div class="stat-val" id="st-photo">0</div></div>
-        </div>
+        <div class="stat-card"><div class="stat-icon si-blue"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="stat-label">Total inscrits</div><div class="stat-val" id="st-total">—</div></div></div>
+        <div class="stat-card"><div class="stat-icon si-gold"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="stat-label">Aujourd'hui</div><div class="stat-val" id="st-today">—</div></div></div>
+        <div class="stat-card"><div class="stat-icon si-green"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="stat-label">Avec photo</div><div class="stat-val" id="st-photo">—</div></div></div>
       </div>
-
       <div class="form-card">
-        <div class="form-card-header">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          <span class="form-card-title">Dernières inscriptions</span>
-        </div>
-        <div id="recent-list" style="padding:0;"></div>
+        <div class="form-card-header"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="form-card-title">Dernières inscriptions</span></div>
+        <div id="recent-list"></div>
       </div>
     </div>
 
-    <!-- ── INSCRIPTION ── -->
     <div id="page-inscription" class="page">
       <div class="page-header">
         <div class="page-title">Inscrire un participant</div>
         <div class="page-sub">Remplissez le formulaire pour enregistrer un nouveau participant</div>
       </div>
       <div class="form-card">
-        <div class="form-card-header">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span class="form-card-title">Informations du participant</span>
-        </div>
+        <div class="form-card-header"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="form-card-title">Informations du participant</span></div>
         <div class="form-card-body">
           <div class="form-section-label">Identité</div>
           <div class="form-grid">
+            <div class="field"><label class="fl">Nom *</label><input type="text" id="f-nom" placeholder="Nom de famille" oninput="clearErr('f-nom','hint-nom')" /><span class="field-hint" id="hint-nom">Champ obligatoire</span></div>
+            <div class="field"><label class="fl">Prénom *</label><input type="text" id="f-prenom" placeholder="Prénom" oninput="clearErr('f-prenom','hint-prenom')" /><span class="field-hint" id="hint-prenom">Champ obligatoire</span></div>
+            <div class="field"><label class="fl">N° de téléphone *</label><input type="tel" id="f-tel" placeholder="+228 XX XX XX XX" oninput="clearErr('f-tel','hint-tel')" /><span class="field-hint" id="hint-tel">Champ obligatoire</span></div>
+            <div class="field"><label class="fl">NNI (N° identité national) *</label><input type="text" id="f-nni" placeholder="Ex: TG-XXXXXXXX" oninput="clearErr('f-nni','hint-nni')" /><span class="field-hint" id="hint-nni">Champ obligatoire</span></div>
             <div class="field">
-              <label class="fl">Nom *</label>
-              <input type="text" id="f-nom" placeholder="Nom de famille" />
+              <label class="fl">Date de naissance *</label>
+              <input type="date" id="f-dob" max="" oninput="clearErr('f-dob','hint-dob')" onchange="checkDate(this)" />
+              <span class="field-hint" id="hint-dob">Date invalide</span>
             </div>
-            <div class="field">
-              <label class="fl">Prénom *</label>
-              <input type="text" id="f-prenom" placeholder="Prénom" />
-            </div>
-            <div class="field">
-              <label class="fl">N° de téléphone *</label>
-              <input type="tel" id="f-tel" placeholder="+228 XX XX XX XX" />
-            </div>
-            <div class="field">
-              <label class="fl">NNI (N° identité national) *</label>
-              <input type="text" id="f-nni" placeholder="Ex: TG-XXXXXXXX" />
-            </div>
-            <div class="field">
-              <label class="fl">Date de naissance</label>
-              <input type="date" id="f-dob" />
-            </div>
-            <div class="field">
-              <label class="fl">Circonscription / Région</label>
-              <input type="text" id="f-region" placeholder="Ex: Lomé, Kara, Sokodé..." />
-            </div>
+            <div class="field"><label class="fl">Circonscription / Région</label><input type="text" id="f-region" placeholder="Ex: Lomé, Kara, Sokodé..." /></div>
           </div>
 
           <div class="form-section-label">Photo d'identité</div>
-          <div class="photo-zone" style="margin-bottom:1.5rem;">
+          <div class="photo-zone">
             <input type="file" accept="image/*" onchange="handlePhoto(event)" />
-            <div class="photo-frame" id="photo-frame">
-              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="photo-meta">
-              <strong id="photo-label">Cliquer pour ajouter une photo</strong>
-              <span>JPG, PNG — Photo de face recommandée</span>
-            </div>
+            <div class="photo-frame" id="photo-frame"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div class="photo-meta"><strong id="photo-label">Cliquer pour ajouter une photo</strong><span>JPG, PNG — max 500 Ko recommandé</span></div>
           </div>
 
           <div class="form-section-label">Documents supplémentaires</div>
-          <div class="docs-zone" style="margin-bottom:1.5rem;">
+          <div class="docs-zone">
             <input type="file" multiple accept="image/*,.pdf" onchange="handleDocs(event)" />
-            <div class="docs-icon">
-              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            </div>
-            <div class="docs-text">
-              <strong>CNI, acte de naissance, etc.</strong>
-              <span id="docs-label">Cliquer pour sélectionner des fichiers (images, PDF)</span>
-            </div>
+            <div class="docs-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="docs-text"><strong>CNI, acte de naissance, etc.</strong><span id="docs-label">Cliquer pour sélectionner des fichiers</span></div>
           </div>
 
-          <div class="alert alert-success" id="alert-success">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Participant enregistré avec succès !
-          </div>
-          <div class="alert alert-error" id="alert-error">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span id="alert-error-msg">Veuillez remplir tous les champs obligatoires.</span>
-          </div>
+          <div class="alert alert-success" id="alert-success"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Participant enregistré avec succès !</div>
+          <div class="alert alert-error" id="alert-error"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="alert-error-msg"></span></div>
 
-          <div style="margin-top:1.75rem; display:flex; gap:10px;">
-            <button class="btn-submit" onclick="submitForm()">
-              <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-              Enregistrer le participant
-            </button>
-          </div>
+          <button class="btn-submit" id="btn-submit" onclick="submitForm()">
+            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+            Enregistrer le participant
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- ── LISTE ── -->
     <div id="page-liste" class="page">
       <div class="page-header">
         <div class="page-title">Liste des inscrits</div>
-        <div class="page-sub" id="list-count-label">0 participant(s)</div>
+        <div class="page-sub" id="list-count-label">Chargement...</div>
       </div>
       <div class="list-toolbar">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" placeholder="Rechercher par nom, prénom ou NNI..." oninput="renderList(this.value)" id="search-input" />
+          <input type="text" id="search-input" placeholder="Rechercher par nom, prénom ou NNI..." oninput="filterList(this.value)" />
         </div>
-        <button class="btn-export" onclick="exportCSV()">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Exporter CSV
-        </button>
+        <button class="btn-export" onclick="loadParticipants()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Actualiser</button>
+        <button class="btn-export" onclick="exportCSV()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter CSV</button>
       </div>
       <div class="p-table">
         <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Participant</th>
-              <th>Téléphone</th>
-              <th>Région</th>
-              <th>Date</th>
-              <th>Docs</th>
-              <th></th>
-            </tr>
-          </thead>
+          <thead><tr><th>#</th><th>Participant</th><th>Téléphone</th><th>Région</th><th>Naissance</th><th>Inscrit le</th><th>Docs</th><th></th></tr></thead>
           <tbody id="p-list-body"></tbody>
         </table>
         <div id="empty-state" class="empty-state hidden">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
           Aucun participant inscrit pour l'instant
         </div>
       </div>
@@ -732,26 +316,54 @@
   </main>
 </div>
 
-<!-- ═══════════════ MODAL ═══════════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal" id="modal-content"></div>
 </div>
 
 <script>
-const PASSWORD = "election2025";
+const SUPABASE_URL = 'https://dzmetpygolpdheqzfjms.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_1AJvDLUbt9ztVEbs_uhLYw_Mnh3SZIy';
+const PASSWORD = 'election2025';
+
+let allParticipants = [];
 let photoData = null;
 let docsCount = 0;
-let participants = JSON.parse(localStorage.getItem('elec_participants') || '[]');
 
-// ── Auth ──
+// Set max date for DOB to today
+document.addEventListener('DOMContentLoaded', () => {
+  const dobInput = document.getElementById('f-dob');
+  if (dobInput) dobInput.max = new Date().toISOString().split('T')[0];
+});
+
+async function sbFetch(path, opts = {}) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    ...opts,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || 'return=representation',
+      ...(opts.headers || {})
+    }
+  });
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e.message || e.details || 'Erreur réseau');
+  }
+  const t = await res.text();
+  return t ? JSON.parse(t) : [];
+}
+
+function showLoading(msg) { document.getElementById('loading-text').textContent = msg || 'Chargement...'; document.getElementById('loading-overlay').classList.add('show'); }
+function hideLoading() { document.getElementById('loading-overlay').classList.remove('show'); }
+
 function doLogin() {
-  const v = document.getElementById('pwd-input').value;
-  if (v === PASSWORD) {
+  if (document.getElementById('pwd-input').value === PASSWORD) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main-app').style.display = 'block';
-    updateDashboard();
+    loadParticipants();
   } else {
-    document.getElementById('err-msg').textContent = 'Mot de passe incorrect. Réessayez.';
+    document.getElementById('err-msg').textContent = 'Mot de passe incorrect.';
     document.getElementById('pwd-input').value = '';
   }
 }
@@ -762,25 +374,41 @@ function doLogout() {
   document.getElementById('pwd-input').value = '';
 }
 
-// ── Navigation ──
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   el.classList.add('active');
-  if (id === 'liste') renderList('');
+  if (id === 'liste') loadParticipants();
   if (id === 'dashboard') updateDashboard();
 }
 
-// ── Photo & Docs ──
+function checkDate(input) {
+  const val = input.value;
+  if (!val) return;
+  const d = new Date(val);
+  const today = new Date(); today.setHours(23,59,59,999);
+  const min = new Date('1900-01-01');
+  if (isNaN(d.getTime()) || d > today || d < min) {
+    input.classList.add('input-error');
+    const hint = document.getElementById('hint-dob');
+    hint.textContent = d > today ? 'La date ne peut pas être dans le futur' : 'Date invalide (avant 1900)';
+    hint.classList.add('show');
+  }
+}
+
+function clearErr(inputId, hintId) {
+  document.getElementById(inputId).classList.remove('input-error');
+  document.getElementById(hintId).classList.remove('show');
+}
+
 function handlePhoto(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
     photoData = ev.target.result;
-    const frame = document.getElementById('photo-frame');
-    frame.innerHTML = `<img src="${photoData}" alt="photo" />`;
+    document.getElementById('photo-frame').innerHTML = `<img src="${photoData}" />`;
     document.getElementById('photo-label').textContent = file.name;
   };
   reader.readAsDataURL(file);
@@ -791,214 +419,182 @@ function handleDocs(e) {
   document.getElementById('docs-label').textContent = docsCount + ' fichier(s) sélectionné(s)';
 }
 
-// ── Submit ──
-function submitForm() {
+async function submitForm() {
+  document.getElementById('alert-success').style.display = 'none';
+  document.getElementById('alert-error').style.display = 'none';
+
   const nom = document.getElementById('f-nom').value.trim();
   const prenom = document.getElementById('f-prenom').value.trim();
   const tel = document.getElementById('f-tel').value.trim();
   const nni = document.getElementById('f-nni').value.trim();
+  const dob = document.getElementById('f-dob').value;
 
-  hideAlerts();
-
-  if (!nom || !prenom || !tel || !nni) {
-    showAlert('error', 'Veuillez remplir tous les champs obligatoires (*).');
-    return;
+  let hasErr = false;
+  if (!nom) { markErr('f-nom','hint-nom','Champ obligatoire'); hasErr = true; }
+  if (!prenom) { markErr('f-prenom','hint-prenom','Champ obligatoire'); hasErr = true; }
+  if (!tel) { markErr('f-tel','hint-tel','Champ obligatoire'); hasErr = true; }
+  if (!nni) { markErr('f-nni','hint-nni','Champ obligatoire'); hasErr = true; }
+  if (dob) {
+    const d = new Date(dob);
+    const today = new Date(); today.setHours(23,59,59,999);
+    if (isNaN(d.getTime()) || d > today || d < new Date('1900-01-01')) {
+      markErr('f-dob','hint-dob', d > today ? 'La date ne peut pas être dans le futur' : 'Date invalide');
+      hasErr = true;
+    }
   }
+  if (hasErr) { showErr('Veuillez corriger les erreurs indiquées.'); return; }
 
-  const exists = participants.find(p => p.nni === nni);
-  if (exists) {
-    showAlert('error', 'Un participant avec ce NNI est déjà inscrit.');
-    return;
+  document.getElementById('btn-submit').disabled = true;
+  showLoading('Enregistrement en cours...');
+
+  try {
+    await sbFetch('participants', {
+      method: 'POST', prefer: 'return=minimal',
+      body: JSON.stringify({ nom, prenom, telephone: tel, nni, date_naissance: dob || null, region: document.getElementById('f-region').value.trim() || null, photo: photoData || null, docs_count: docsCount })
+    });
+    const s = document.getElementById('alert-success');
+    s.style.display = 'flex';
+    setTimeout(() => s.style.display = 'none', 3500);
+    resetForm();
+    await loadParticipants();
+    updateDashboard();
+  } catch(err) {
+    showErr(err.message.includes('unique') || err.message.includes('duplicate') ? 'Ce NNI est déjà enregistré.' : 'Erreur : ' + err.message);
+  } finally {
+    document.getElementById('btn-submit').disabled = false;
+    hideLoading();
   }
+}
 
-  const p = {
-    id: Date.now(),
-    nom, prenom, tel, nni,
-    dob: document.getElementById('f-dob').value,
-    region: document.getElementById('f-region').value.trim(),
-    photo: photoData,
-    docs: docsCount,
-    date: new Date().toISOString()
-  };
+function markErr(iid, hid, msg) {
+  document.getElementById(iid).classList.add('input-error');
+  const h = document.getElementById(hid);
+  h.textContent = msg; h.classList.add('show');
+}
 
-  participants.push(p);
-  localStorage.setItem('elec_participants', JSON.stringify(participants));
-  showAlert('success');
+function showErr(msg) {
+  document.getElementById('alert-error-msg').textContent = msg;
+  const e = document.getElementById('alert-error');
+  e.style.display = 'flex';
+  setTimeout(() => e.style.display = 'none', 5000);
+}
 
-  ['f-nom','f-prenom','f-tel','f-nni','f-dob','f-region'].forEach(id => document.getElementById(id).value = '');
-  photoData = null;
-  docsCount = 0;
+function resetForm() {
+  ['f-nom','f-prenom','f-tel','f-nni','f-dob','f-region'].forEach(id => { const el = document.getElementById(id); if(el){el.value='';el.classList.remove('input-error');} });
+  ['hint-nom','hint-prenom','hint-tel','hint-nni','hint-dob'].forEach(id => document.getElementById(id).classList.remove('show'));
+  photoData = null; docsCount = 0;
   document.getElementById('photo-frame').innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
   document.getElementById('photo-label').textContent = 'Cliquer pour ajouter une photo';
-  document.getElementById('docs-label').textContent = 'Cliquer pour sélectionner des fichiers (images, PDF)';
+  document.getElementById('docs-label').textContent = 'Cliquer pour sélectionner des fichiers';
 }
 
-function showAlert(type, msg) {
-  if (type === 'success') {
-    const el = document.getElementById('alert-success');
-    el.style.display = 'flex';
-    setTimeout(() => el.style.display = 'none', 3500);
-  } else {
-    document.getElementById('alert-error-msg').textContent = msg;
-    const el = document.getElementById('alert-error');
-    el.style.display = 'flex';
-    setTimeout(() => el.style.display = 'none', 4000);
-  }
+async function loadParticipants() {
+  showLoading('Chargement des données...');
+  try {
+    allParticipants = await sbFetch('participants?select=*&order=created_at.desc');
+    renderList('');
+    updateDashboard();
+  } catch(e) {
+    document.getElementById('list-count-label').textContent = 'Erreur de chargement';
+  } finally { hideLoading(); }
 }
 
-function hideAlerts() {
-  document.getElementById('alert-success').style.display = 'none';
-  document.getElementById('alert-error').style.display = 'none';
-}
+function filterList(q) { renderList(q); }
 
-// ── List ──
 function renderList(q) {
-  const filtered = participants.filter(p =>
-    !q || [p.nom, p.prenom, p.nni, p.region].some(v => v && v.toLowerCase().includes(q.toLowerCase()))
-  );
-
+  const filtered = allParticipants.filter(p => !q || [p.nom,p.prenom,p.nni,p.region].some(v => v && v.toLowerCase().includes(q.toLowerCase())));
   document.getElementById('list-count-label').textContent = filtered.length + ' participant(s)';
   const body = document.getElementById('p-list-body');
   const empty = document.getElementById('empty-state');
-
-  if (!filtered.length) {
-    body.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
-  }
-
+  if (!filtered.length) { body.innerHTML = ''; empty.classList.remove('hidden'); return; }
   empty.classList.add('hidden');
-
-  body.innerHTML = filtered.map((p, i) => {
-    const initials = ((p.prenom[0]||'') + (p.nom[0]||'')).toUpperCase();
-    const avatar = p.photo
-      ? `<img src="${p.photo}" alt="${p.prenom}" />`
-      : initials;
-    const date = new Date(p.date).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' });
+  body.innerHTML = filtered.map((p,i) => {
+    const ini = ((p.prenom||'')[0]||'').toUpperCase()+((p.nom||'')[0]||'').toUpperCase();
+    const av = p.photo ? `<img src="${p.photo}" />` : ini;
+    const dob = p.date_naissance ? new Date(p.date_naissance+'T12:00:00').toLocaleDateString('fr-FR') : '—';
+    const dt = new Date(p.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
     return `<tr>
-      <td style="color:var(--text-faint); font-size:12px;">${String(i+1).padStart(3,'0')}</td>
-      <td>
-        <div class="p-name-cell">
-          <div class="participant-avatar">${avatar}</div>
-          <div>
-            <div class="p-fullname">${p.prenom} ${p.nom}</div>
-            <div class="p-nni">${p.nni}</div>
-          </div>
-        </div>
-      </td>
-      <td>${p.tel}</td>
-      <td>${p.region ? `<span class="badge badge-blue">${p.region}</span>` : '<span style="color:var(--text-faint)">—</span>'}</td>
-      <td style="font-size:13px; color:var(--text-muted);">${date}</td>
-      <td>${p.docs > 0 ? `<span class="badge badge-gold">${p.docs} doc(s)</span>` : '<span style="color:var(--text-faint)">—</span>'}</td>
-      <td>
-        <div class="action-btns">
-          <button class="btn-icon btn-icon-view" onclick="viewParticipant(${p.id})" title="Voir le profil">
-            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-          <button class="btn-icon btn-icon-del" onclick="deleteParticipant(${p.id})" title="Supprimer">
-            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-          </button>
-        </div>
-      </td>
+      <td style="color:var(--text-faint);font-size:12px;">${String(i+1).padStart(3,'0')}</td>
+      <td><div class="p-name-cell"><div class="p-avatar">${av}</div><div><div class="p-fullname">${p.prenom} ${p.nom}</div><div class="p-nni">${p.nni}</div></div></div></td>
+      <td>${p.telephone}</td>
+      <td>${p.region?`<span class="badge badge-blue">${p.region}</span>`:'<span style="color:var(--text-faint)">—</span>'}</td>
+      <td style="font-size:13px;color:var(--text-muted);">${dob}</td>
+      <td style="font-size:13px;color:var(--text-muted);">${dt}</td>
+      <td>${p.docs_count>0?`<span class="badge badge-gold">${p.docs_count} doc(s)</span>`:'<span style="color:var(--text-faint)">—</span>'}</td>
+      <td><div class="action-btns">
+        <button class="btn-icon btn-icon-view" onclick="viewP(${p.id})" title="Voir"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        <button class="btn-icon btn-icon-del" onclick="delP(${p.id})" title="Supprimer"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button>
+      </div></td>
     </tr>`;
   }).join('');
 }
 
-// ── Dashboard ──
 function updateDashboard() {
   const today = new Date().toDateString();
-  document.getElementById('st-total').textContent = participants.length;
-  document.getElementById('st-today').textContent = participants.filter(p => new Date(p.date).toDateString() === today).length;
-  document.getElementById('st-photo').textContent = participants.filter(p => p.photo).length;
-
-  const recent = [...participants].reverse().slice(0, 5);
+  document.getElementById('st-total').textContent = allParticipants.length;
+  document.getElementById('st-today').textContent = allParticipants.filter(p => new Date(p.created_at).toDateString()===today).length;
+  document.getElementById('st-photo').textContent = allParticipants.filter(p => p.photo).length;
+  const recent = allParticipants.slice(0,5);
   const el = document.getElementById('recent-list');
-
-  if (!recent.length) {
-    el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Aucune inscription pour l\'instant</div>';
-    return;
-  }
-
-  el.innerHTML = recent.map((p, i) => {
-    const initials = ((p.prenom[0]||'') + (p.nom[0]||'')).toUpperCase();
-    const avatar = p.photo ? `<img src="${p.photo}" alt="${p.prenom}" />` : initials;
-    const date = new Date(p.date).toLocaleDateString('fr-FR', { day:'2-digit', month:'short' });
-    return `<div style="display:flex; align-items:center; gap:12px; padding:12px 20px; ${i < recent.length-1 ? 'border-bottom:1px solid var(--border);' : ''}">
-      <div class="participant-avatar">${avatar}</div>
-      <div style="flex:1;">
-        <div style="font-weight:500; font-size:14px;">${p.prenom} ${p.nom}</div>
-        <div style="font-size:12px; color:var(--text-muted);">${p.nni}${p.region ? ' · ' + p.region : ''}</div>
-      </div>
-      <div style="font-size:12px; color:var(--text-faint);">${date}</div>
+  if (!recent.length) { el.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Aucune inscription pour l\'instant</div>'; return; }
+  el.innerHTML = recent.map((p,i) => {
+    const ini = ((p.prenom||'')[0]||'').toUpperCase()+((p.nom||'')[0]||'').toUpperCase();
+    const av = p.photo?`<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;" />`:`<span>${ini}</span>`;
+    const dt = new Date(p.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 20px;${i<recent.length-1?'border-bottom:1px solid var(--border);':''}">
+      <div class="p-avatar">${av}</div>
+      <div style="flex:1;"><div style="font-weight:500;font-size:14px;">${p.prenom} ${p.nom}</div><div style="font-size:12px;color:var(--text-muted);">${p.nni}${p.region?' · '+p.region:''}</div></div>
+      <div style="font-size:12px;color:var(--text-faint);">${dt}</div>
     </div>`;
   }).join('');
 }
 
-// ── View Modal ──
-function viewParticipant(id) {
-  const p = participants.find(x => x.id === id);
-  if (!p) return;
-  const initials = ((p.prenom[0]||'') + (p.nom[0]||'')).toUpperCase();
-  const avatar = p.photo ? `<img src="${p.photo}" alt="${p.prenom}" style="width:100%;height:100%;object-fit:cover;" />` : initials;
-  const dob = p.dob ? new Date(p.dob).toLocaleDateString('fr-FR') : '—';
-  const date = new Date(p.date).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
-
+function viewP(id) {
+  const p = allParticipants.find(x=>x.id===id); if(!p) return;
+  const ini = ((p.prenom||'')[0]||'').toUpperCase()+((p.nom||'')[0]||'').toUpperCase();
+  const av = p.photo?`<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;" />`:ini;
+  const dob = p.date_naissance ? new Date(p.date_naissance+'T12:00:00').toLocaleDateString('fr-FR') : '—';
+  const dt = new Date(p.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
   document.getElementById('modal-content').innerHTML = `
-    <div class="modal-header">
-      <div class="modal-title">Profil du participant</div>
-      <button class="btn-close" onclick="closeModal()">×</button>
-    </div>
-    <div class="modal-avatar">${avatar}</div>
-    <div style="text-align:center; margin-bottom:1.5rem;">
-      <div style="font-family:'DM Serif Display',serif; font-size:20px;">${p.prenom} ${p.nom}</div>
-      <div style="font-size:13px; color:var(--text-muted);">${p.region || 'Région non renseignée'}</div>
-    </div>
+    <div class="modal-header"><div class="modal-title">Profil du participant</div><button class="btn-close" onclick="closeModal()">×</button></div>
+    <div class="modal-avatar">${av}</div>
+    <div style="text-align:center;margin-bottom:1.5rem;"><div style="font-family:'DM Serif Display',serif;font-size:20px;">${p.prenom} ${p.nom}</div><div style="font-size:13px;color:var(--text-muted);">${p.region||'Région non renseignée'}</div></div>
     <div class="modal-fields">
-      <div class="modal-field"><span class="modal-field-label">NNI</span><span class="modal-field-val">${p.nni}</span></div>
-      <div class="modal-field"><span class="modal-field-label">Téléphone</span><span class="modal-field-val">${p.tel}</span></div>
-      <div class="modal-field"><span class="modal-field-label">Naissance</span><span class="modal-field-val">${dob}</span></div>
-      <div class="modal-field"><span class="modal-field-label">Documents</span><span class="modal-field-val">${p.docs > 0 ? p.docs + ' fichier(s) joint(s)' : 'Aucun document'}</span></div>
-      <div class="modal-field"><span class="modal-field-label">Inscrit le</span><span class="modal-field-val">${date}</span></div>
-    </div>
-  `;
+      <div class="modal-field"><span class="mfl">NNI</span><span class="mfv">${p.nni}</span></div>
+      <div class="modal-field"><span class="mfl">Téléphone</span><span class="mfv">${p.telephone}</span></div>
+      <div class="modal-field"><span class="mfl">Naissance</span><span class="mfv">${dob}</span></div>
+      <div class="modal-field"><span class="mfl">Documents</span><span class="mfv">${p.docs_count>0?p.docs_count+' fichier(s)':'Aucun'}</span></div>
+      <div class="modal-field"><span class="mfl">Inscrit le</span><span class="mfv">${dt}</span></div>
+    </div>`;
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+async function delP(id) {
+  if (!confirm('Supprimer ce participant définitivement ?')) return;
+  showLoading('Suppression...');
+  try {
+    await sbFetch(`participants?id=eq.${id}`,{method:'DELETE',prefer:'return=minimal'});
+    allParticipants = allParticipants.filter(p=>p.id!==id);
+    renderList(document.getElementById('search-input')?.value||'');
+    updateDashboard();
+  } catch(e) { alert('Erreur : '+e.message); }
+  finally { hideLoading(); }
 }
 
-// ── Delete ──
-function deleteParticipant(id) {
-  if (!confirm('Supprimer ce participant de la liste ?')) return;
-  participants = participants.filter(p => p.id !== id);
-  localStorage.setItem('elec_participants', JSON.stringify(participants));
-  renderList(document.getElementById('search-input')?.value || '');
-  updateDashboard();
-}
-
-// ── Export CSV ──
 function exportCSV() {
-  if (!participants.length) { alert('Aucun participant à exporter.'); return; }
-  const headers = ['N°','Nom','Prénom','Téléphone','NNI','Date naissance','Région','Documents','Date inscription'];
-  const rows = participants.map((p, i) => [
-    i+1, p.nom, p.prenom, p.tel, p.nni,
-    p.dob || '', p.region || '',
-    p.docs || 0,
-    new Date(p.date).toLocaleDateString('fr-FR')
-  ]);
-  const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
-  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
+  if (!allParticipants.length) { alert('Aucun participant à exporter.'); return; }
+  const h = ['N°','Nom','Prénom','Téléphone','NNI','Date naissance','Région','Docs','Date inscription'];
+  const rows = allParticipants.map((p,i) => [i+1,p.nom,p.prenom,p.telephone,p.nni,p.date_naissance?new Date(p.date_naissance+'T12:00:00').toLocaleDateString('fr-FR'):'',p.region||'',p.docs_count||0,new Date(p.created_at).toLocaleDateString('fr-FR')]);
+  const csv = [h,...rows].map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
   const a = document.createElement('a');
-  a.href = url; a.download = 'inscrits_election_2025.csv';
-  a.click(); URL.revokeObjectURL(url);
+  a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
+  a.download = 'inscrits_election_2025.csv'; a.click();
 }
 
-// Enter key on login
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
-});
+document.addEventListener('keydown', e => { if(e.key==='Enter' && document.getElementById('login-screen').style.display!=='none') doLogin(); });
 </script>
 </body>
 </html>
+
