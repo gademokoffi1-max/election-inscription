@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Plateforme d'Inscription Électorale</title>
+<title>Plateforme d'Inscription Électorale 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -253,8 +254,8 @@
           <div class="form-grid">
             <div class="field"><label class="fl">Nom *</label><input type="text" id="f-nom" placeholder="Nom de famille" oninput="clearErr('f-nom','hint-nom')" /><span class="field-hint" id="hint-nom">Champ obligatoire</span></div>
             <div class="field"><label class="fl">Prénom *</label><input type="text" id="f-prenom" placeholder="Prénom" oninput="clearErr('f-prenom','hint-prenom')" /><span class="field-hint" id="hint-prenom">Champ obligatoire</span></div>
-            <div class="field"><label class="fl">N° de téléphone *</label><input type="tel" id="f-tel" placeholder="+228 XX XX XX XX" oninput="clearErr('f-tel','hint-tel')" /><span class="field-hint" id="hint-tel">Champ obligatoire</span></div>
-            <div class="field"><label class="fl">NNI (N° identité national) *</label><input type="text" id="f-nni" placeholder="Ex: TG-XXXXXXXX" oninput="clearErr('f-nni','hint-nni')" /><span class="field-hint" id="hint-nni">Champ obligatoire</span></div>
+            <div class="field"><label class="fl">N° de téléphone *</label><input type="tel" id="f-tel" placeholder="+228 XX XX XX XX" oninput="validateTel(this)" /><span class="field-hint" id="hint-tel">Champ obligatoire</span></div>
+            <div class="field"><label class="fl">NNI (N° identité national) *</label><input type="text" id="f-nni" placeholder="Ex: TG-XXXXXXXX" oninput="validateNNI(this)" /><span class="field-hint" id="hint-nni">Champ obligatoire</span></div>
             <div class="field">
               <label class="fl">Date de naissance *</label>
               <input type="date" id="f-dob" max="" oninput="clearErr('f-dob','hint-dob')" onchange="checkDate(this)" />
@@ -323,7 +324,7 @@
 <script>
 const SUPABASE_URL = 'https://dzmetpygolpdheqzfjms.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_1AJvDLUbt9ztVEbs_uhLYw_Mnh3SZIy';
-const PASSWORD = 'election2025';
+const PASSWORD = 'vote2026';
 
 let allParticipants = [];
 let photoData = null;
@@ -383,6 +384,38 @@ function showPage(id, el) {
   if (id === 'dashboard') updateDashboard();
 }
 
+function validateNNI(input) {
+  // Allow only letters, digits and dash
+  const cleaned = input.value.replace(/[^a-zA-Z0-9\-]/g, '').toUpperCase();
+  if (input.value !== cleaned) input.value = cleaned;
+  const val = input.value.trim();
+  if (!val) return;
+  if (val.length < 4) {
+    input.classList.add('input-error');
+    const h = document.getElementById('hint-nni');
+    h.textContent = 'NNI invalide — lettres et chiffres uniquement'; h.classList.add('show');
+  } else {
+    clearErr('f-nni','hint-nni');
+  }
+}
+
+function validateTel(input) {
+  // Suppress any non-digit and non-+ character as the user types
+  const cleaned = input.value.replace(/[^\d+\s\-]/g, '');
+  if (input.value !== cleaned) input.value = cleaned;
+  const val = input.value.trim();
+  if (!val) return;
+  // Must have at least 6 digits
+  const digitsOnly = val.replace(/\D/g,'');
+  if (digitsOnly.length < 6) {
+    input.classList.add('input-error');
+    const h = document.getElementById('hint-tel');
+    h.textContent = 'Numéro invalide — chiffres uniquement'; h.classList.add('show');
+  } else {
+    clearErr('f-tel','hint-tel');
+  }
+}
+
 function checkDate(input) {
   const val = input.value;
   if (!val) return;
@@ -401,7 +434,7 @@ function clearErr(inputId, hintId) {
   document.getElementById(inputId).classList.remove('input-error');
   document.getElementById(hintId).classList.remove('show');
 }
-
+ 
 function handlePhoto(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -433,7 +466,9 @@ async function submitForm() {
   if (!nom) { markErr('f-nom','hint-nom','Champ obligatoire'); hasErr = true; }
   if (!prenom) { markErr('f-prenom','hint-prenom','Champ obligatoire'); hasErr = true; }
   if (!tel) { markErr('f-tel','hint-tel','Champ obligatoire'); hasErr = true; }
+  else if (tel.replace(/\D/g,'').length < 6) { markErr('f-tel','hint-tel','Numéro invalide — chiffres uniquement'); hasErr = true; }
   if (!nni) { markErr('f-nni','hint-nni','Champ obligatoire'); hasErr = true; }
+  else if (nni.length < 4) { markErr('f-nni','hint-nni','NNI invalide — lettres et chiffres uniquement'); hasErr = true; }
   if (dob) {
     const d = new Date(dob);
     const today = new Date(); today.setHours(23,59,59,999);
@@ -590,11 +625,10 @@ function exportCSV() {
   const csv = [h,...rows].map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download = 'inscrits_election_2025.csv'; a.click();
+  a.download = 'inscrits_election_2026.csv'; a.click();
 }
 
 document.addEventListener('keydown', e => { if(e.key==='Enter' && document.getElementById('login-screen').style.display!=='none') doLogin(); });
 </script>
 </body>
 </html>
-
